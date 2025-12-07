@@ -98,13 +98,11 @@ class QuickbooksProvider extends AbstractProvider
         return [self::SCOPE_ACCOUNTING];
     }
 
-    public function checkResponse(ResponseInterface $response, $data)
+    public function checkResponse(ResponseInterface $response, $data): void
     {
         if (!empty($data['errors'])) {
             throw new IdentityProviderException($data['errors'], 0, $data);
         }
-
-        return $data;
     }
 
     protected function createResourceOwner(array $response, AccessToken $token): QuickbooksCompany
