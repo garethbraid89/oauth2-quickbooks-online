@@ -26,7 +26,8 @@ class QuickbooksProvider extends AbstractProvider
     protected ?string $realmId = null;
 
     /**
-     * @param self::API_URL_*
+     * @param string $apiUrl
+     * @return QuickbooksProvider
      */
     public function setApiUrl(string $apiUrl): self
     {
@@ -40,12 +41,12 @@ class QuickbooksProvider extends AbstractProvider
         return $this;
     }
 
-    public function getBaseAuthorizationUrl()
+    public function getBaseAuthorizationUrl(): string
     {
         return 'https://appcenter.intuit.com/connect/oauth2';
     }
 
-    public function getBaseAccessTokenUrl(array $params)
+    public function getBaseAccessTokenUrl(array $params): string
     {
         /**
          * Quickbooks Online's OAuth 2.0 redirect will include a `realmId` parameter
@@ -60,7 +61,7 @@ class QuickbooksProvider extends AbstractProvider
         return 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer';
     }
 
-    protected function prepareAccessTokenResponse(array $result)
+    protected function prepareAccessTokenResponse(array $result): array
     {
         $result = parent::prepareAccessTokenResponse($result);
 
@@ -75,7 +76,7 @@ class QuickbooksProvider extends AbstractProvider
         return $result;
     }
 
-    public function getResourceOwnerDetailsUrl(AccessToken $token)
+    public function getResourceOwnerDetailsUrl(AccessToken $token): string
     {
         if (!$token->getResourceOwnerId()) {
             throw new RuntimeException(
@@ -92,7 +93,7 @@ class QuickbooksProvider extends AbstractProvider
         );
     }
 
-    public function getDefaultScopes()
+    public function getDefaultScopes(): array
     {
         return [self::SCOPE_ACCOUNTING];
     }
@@ -106,7 +107,7 @@ class QuickbooksProvider extends AbstractProvider
         return $data;
     }
 
-    protected function createResourceOwner(array $response, AccessToken $token)
+    protected function createResourceOwner(array $response, AccessToken $token): QuickbooksCompany
     {
         return new QuickbooksCompany($response, $token->getResourceOwnerId());
     }
@@ -114,7 +115,7 @@ class QuickbooksProvider extends AbstractProvider
     /**
      * @inheritdoc
      */
-    protected function getDefaultHeaders()
+    protected function getDefaultHeaders(): array
     {
         return [
             'Accept' => 'application/json',
